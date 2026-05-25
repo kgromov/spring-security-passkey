@@ -23,6 +23,7 @@ public class SecurityConfig {
     @Bean
     Customizer<HttpSecurity> httpSecurityCustomizer() {
         return http -> http
+                // http://localhost:8080/webauthn/register - in order to register new passkey
                 .webAuthn(a -> a.allowedOrigins("http://localhost:8080/")
                         .rpName("kgromov")
                         .rpId("localhost")
