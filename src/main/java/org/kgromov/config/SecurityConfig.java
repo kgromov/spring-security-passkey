@@ -3,10 +3,12 @@ package org.kgromov.config;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.ott.OneTimeToken;
+import org.springframework.security.authentication.ott.OneTimeTokenService;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authorization.EnableMultiFactorAuthentication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +23,7 @@ import org.springframework.security.web.authentication.ott.RedirectOneTimeTokenG
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Set;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -86,6 +89,11 @@ public class SecurityConfig {
     @Bean
     OneTimeTokenGenerationSuccessHandler ottSuccessHandler() {
         return new OttSuccessHandler();
+    }
+
+    @Bean
+    OneTimeTokenService pinOneTimeTokenService(@Value("${otp.duration:3m}") Duration duration) {
+        return new PinOneTimeTokenService(duration);
     }
 
     // More verbose implementation of OneTimeTokenGenerationSuccessHandler with redirection
