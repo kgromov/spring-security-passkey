@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.ott.OneTimeToken;
 import org.springframework.security.authentication.ott.OneTimeTokenService;
@@ -37,7 +38,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     // The same as with Customizer - more traditional way
-//    @Bean
+    @Profile("filter-chain")
+    @Bean
     SecurityFilterChain filterChain(HttpSecurity http) {
         return http
                 .authorizeHttpRequests((authorize) -> authorize
@@ -58,6 +60,8 @@ public class SecurityConfig {
                 .webAuthn(a -> a.allowedOrigins("http://localhost:8080/")
                         .rpName("kgromov")
                         .rpId("localhost")
+                        // HttpSessionPublicKeyCredentialCreationOptionsRepository
+//                        .creationOptionsRepository(publicKeyCredentialRepository)
                 )
                 .oneTimeTokenLogin(ott ->
                         ott.tokenGenerationSuccessHandler((request, response, oneTimeToken) -> {
@@ -70,31 +74,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    UserDetailsManager inMemoryUserDetailsManager() {
-        return new InMemoryUserDetailsManager(
-                Set.of(
-                        User.withUsername("user")
-                                .password("{noop}user")
-                                .roles("USER")
-                                .build(),
-                        User.withDefaultPasswordEncoder()
-                                .username("admin")
-                                .password("admin")
-                                .roles("ADMIN", "USER")
-                                .build()
-                )
-        );
-    }
-
-    @Bean
     OneTimeTokenGenerationSuccessHandler ottSuccessHandler() {
         return new OttSuccessHandler();
     }
 
-    @Bean
-    OneTimeTokenService pinOneTimeTokenService(@Value("${otp.duration:3m}") Duration duration) {
-        return new PinOneTimeTokenService(duration);
-    }
 
     // More verbose implementation of OneTimeTokenGenerationSuccessHandler with redirection
     private static class OttSuccessHandler implements OneTimeTokenGenerationSuccessHandler {

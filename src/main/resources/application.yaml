@@ -1,6 +1,9 @@
 spring:
   application:
     name: spring-security-passkey
+  sql:
+    init:
+      mode: always
 
 otp:
   duration: 1m
