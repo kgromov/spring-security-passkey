@@ -23,8 +23,9 @@ public class UsersPopulator implements CommandLineRunner {
     public void run(String @NonNull ... args) {
         jdbcUserDetailsManager.setEnableUpdatePassword(true);
         Set<UserDetails> users = Set.of(
-                User.withUsername("user")
-                        .password("{noop}user")
+                User.withDefaultPasswordEncoder()
+                        .username("user")
+                        .password("user")
                         .roles("USER")
                         .build(),
                 User.withDefaultPasswordEncoder()

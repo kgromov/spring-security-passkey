@@ -3,35 +3,29 @@ package org.kgromov.config;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.ott.OneTimeToken;
-import org.springframework.security.authentication.ott.OneTimeTokenService;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authorization.EnableMultiFactorAuthentication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.authority.FactorGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.ott.OneTimeTokenGenerationSuccessHandler;
 import org.springframework.security.web.authentication.ott.RedirectOneTimeTokenGenerationSuccessHandler;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.util.Set;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @EnableMultiFactorAuthentication(authorities = {
         FactorGrantedAuthority.PASSWORD_AUTHORITY,
-        FactorGrantedAuthority.OTT_AUTHORITY
+//        FactorGrantedAuthority.OTT_AUTHORITY
+        FactorGrantedAuthority.WEBAUTHN_AUTHORITY
 })
 @EnableWebSecurity(debug = true)
 @Configuration
